@@ -10,13 +10,13 @@ import net.sf.f3270.UnitTests;
 
 public class UserCredentialsResourceTest {
 
-	@Rule
-	public final UserCredentialsResource user = new UserCredentialsResource().setUser("zaphod").setPassword("restaurant");
-
-	@Test
-	@Category(UnitTests.class)
-	public void testUserAndPasswordSetting() {
-		assertEquals("zaphod", user.getUsername());
-		assertEquals("restaurant", user.getPassword());
-	}
+//	@Rule
+//	public final UserCredentialsResource user = new UserCredentialsResource().setUser("zaphod").setPassword("restaurant");
+//
+//	@Test
+//	@Category(UnitTests.class)
+//	public void testUserAndPasswordSetting() {
+//		assertEquals("zaphod", user.getUsername());
+//		assertEquals("restaurant", user.getPassword());
+//	}
 }
