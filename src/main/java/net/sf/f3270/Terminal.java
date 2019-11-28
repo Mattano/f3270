@@ -19,6 +19,7 @@ public class Terminal {
     private final Collection<TerminalObserver> observers = new ArrayList<TerminalObserver>();
 
     private final String s3270Path;
+    private final String sslConection;
     private final String hostname;
     private final int port;
     private final TerminalType type;
@@ -39,9 +40,10 @@ public class Terminal {
      * @param charset charset for host
      * @param showTerminalWindow flag if terminal should be shown
      */
-    public Terminal(final String s3270Path, final String hostname, final int port, final TerminalType type,
+    public Terminal(final String s3270Path, String sslConection, final String hostname, final int port, final TerminalType type,
             final TerminalModel mode, final HostCharset charset, final boolean showTerminalWindow) {
         this.s3270Path = s3270Path;
+        this.sslConection = sslConection;
         this.hostname = hostname;
         this.port = port;
         this.type = type;
@@ -63,9 +65,10 @@ public class Terminal {
      * @param showTerminalWindow flag for terminal window
      * @param isDebug flag if debug infos should be shown
      */
-    public Terminal(final String s3270Path, final String hostname, final int port, final TerminalType type,
+    public Terminal(final String s3270Path, final String sslConection, final String hostname, final int port, final TerminalType type,
             final TerminalModel mode, final HostCharset charset, final boolean showTerminalWindow, final boolean isDebug) {
         this.s3270Path = s3270Path;
+        this.sslConection = sslConection;
         this.hostname = hostname;
         this.port = port;
         this.type = type;
@@ -93,7 +96,7 @@ public class Terminal {
     }
 
     public Terminal connect() {
-        s3270 = new S3270(this.s3270Path, this.hostname, this.port, this.type, this.charset, this.mode);
+        s3270 = new S3270(this.s3270Path, this.sslConection, this.hostname, this.port, this.type, this.charset, this.mode);
         s3270.setDebug(this.debug);
         updateScreen();
         for (TerminalObserver observer : observers) {

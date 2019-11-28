@@ -26,10 +26,8 @@ public class TerminalResource extends ExternalResource {
 	 */
 	private Terminal driver;
 
-	/**
-	 * specify path to client, default to windows version
-	 */
-	private String pathToClient = "s3270/client/ws3270.exe";
+  /** specify path to client, default to windows version */
+  private String pathToClient = "D:\\wc3270\\ws3270.exe";
 
 	/**
 	 * Host-Terminal
@@ -175,7 +173,7 @@ public class TerminalResource extends ExternalResource {
 			this.pathToClient = tClientPath;
 		}
 		// connect to host with given settings.
-		this.driver = new Terminal(this.pathToClient, this.host, this.port, this.type, this.mode, this.charset, this.showTerminal, this.debug);
+		this.driver = new Terminal(this.pathToClient, "",  this.host, this.port, this.type, this.mode, this.charset, this.showTerminal, this.debug);
 		logger.info("connect to host (" + this.host + ":" + this.port + ") with charset: " + this.charset);
 		this.driver.connect();
 	}

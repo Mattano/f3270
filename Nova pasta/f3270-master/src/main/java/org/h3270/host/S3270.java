@@ -34,12 +34,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-
-import net.sf.f3270.HostCharset;
-import net.sf.f3270.TerminalModel;
-import net.sf.f3270.TerminalType;
 
 /**
  * A Terminal that connects to the host via s3270.
@@ -49,15 +44,39 @@ import net.sf.f3270.TerminalType;
  */
 public class S3270 {
 
+    public enum TerminalMode {
+        MODE_80_24(2), MODE_80_32(3), MODE_80_43(4), MODE_132_27(5);
+        private int mode;
+
+        private TerminalMode(int mode) {
+            this.mode = mode;
+        }
+
+        public int getMode() {
+            return mode;
+        }
+    }
+
+    public enum TerminalType {
+        TYPE_3278("3278"), TYPE_3279("3279");
+        private String type;
+
+        private TerminalType(String type) {
+            this.type = type;
+        }
+
+        public String getType() {
+            return type;
+        }
+    }
+
     private static final Logger logger = Logger.getLogger(S3270.class);
 
     private final String s3270Path;
-    private final String sslConnection;
     private String hostname;
     private final int port;
     private final TerminalType type;
-    private final TerminalModel mode;
-    private final HostCharset charset;
+    private final TerminalMode mode;
 
     private S3270Screen screen = null;
 
@@ -85,13 +104,10 @@ public class S3270 {
      * Constructs a new S3270 object. The s3270 subprocess (which does the communication with the host) is immediately
      * started and connected to the target host. If this fails, the constructor will throw an appropriate exception.
      * 
-     * @param s3270Path   path to executable
-     * @param hostname    host
-     * @param port        port
-     * @param type        emulation type
-     * @param hostCharset charset
-     * @param mode        mode
-     * 
+     * @param hostname
+     *            the name of the host to connect to
+     * @param configuration
+     *            the h3270 configuration, derived from h3270-config.xml
      * @throws org.h3270.host.UnknownHostException
      *             if <code>hostname</code> cannot be resolved
      * @throws org.h3270.host.HostUnreachableException
@@ -99,22 +115,20 @@ public class S3270 {
      * @throws org.h3270.host.S3270Exception
      *             for any other error not matched by the above
      */
-    public S3270(final String s3270Path, final String sslConnection, final String hostname, final int port, final TerminalType type, final HostCharset hostCharset,
-            final TerminalModel mode) {
+    public S3270(final String s3270Path, final String hostname, final int port, final TerminalType type,
+            final TerminalMode mode) {
 
         this.s3270Path = s3270Path;
-        this.sslConnection = sslConnection;
         this.hostname = hostname;
         this.port = port;
         this.type = type;
         this.mode = mode;
-        this.charset = hostCharset;
         this.screen = new S3270Screen();
 
         checkS3270PathValid(s3270Path);
 
-        final String commandLine = String.format("%s -model %s-%d %s%s:%d -charset %s -noverifycert", this.s3270Path, this.type.getType(), this.mode.getMode(),
-                this.sslConnection, this.hostname, this.port, this.charset.getCharsetName());
+        final String commandLine = String.format("%s -model %s-%d %s:%d", s3270Path, type.getType(), mode.getMode(),
+                hostname, port);
         try {
             logger.info("starting " + commandLine);
             s3270 = Runtime.getRuntime().exec(commandLine);
@@ -128,29 +142,13 @@ public class S3270 {
         } catch (final IOException ex) {
             throw new RuntimeException("IO Exception while starting s3270", ex);
         }
-    
-    }
-
-    /**
-     * Old constructor without host charset. Charset is defaulted to "bracket", which
-     * is also the default in s3270 terminal emulation.
-     * 
-     * @param s3270Path path to executable
-     * @param hostname  hostname
-     * @param port      port
-     * @param type      emulation type
-     * @param mode      enulation mode
-     */
-    public S3270(final String s3270Path, String sslConnection, final String hostname, final int port, final TerminalType type,
-            final TerminalModel mode) {
-    	this(s3270Path, sslConnection, hostname, port, type, HostCharset.BRACKET, mode);
     }
 
     private void checkS3270PathValid(String path) {
         try {
             Runtime.getRuntime().exec(path + " -v");
         } catch (Exception e) {
-            throw new RuntimeException("could not find s3270 executable in the path: " + path);
+            throw new RuntimeException("could not find s3270 executable in the path");
         }
     }
 
@@ -176,7 +174,7 @@ public class S3270 {
         return type;
     }
 
-    public TerminalModel getMode() {
+    public TerminalMode getMode() {
         return mode;
     }
 
@@ -203,10 +201,6 @@ public class S3270 {
 
     /**
      * Perform an s3270 command. All communication with s3270 should go via this method.
-     * 
-     * @param command terminal command
-     * 
-     * @return result from command eexecution
      */
     public Result doCommand(final String command) {
         assertConnected();
@@ -217,14 +211,6 @@ public class S3270 {
                 logger.debug("---> " + command);
             }
 
-            // new s3270 terminal > 3.5 needs a short time.
-            // @TODO: needs to be analyzed
-            try {
-				Thread.sleep(100L);
-			} catch (InterruptedException e) {
-				logger.error("i got interrupted.", e);
-			}
-            
             final List<String> lines = new ArrayList<String>();
             while (true) {
                 final String line = in.readLine();
@@ -282,7 +268,6 @@ public class S3270 {
     // This message is hard-coded in s3270 as of version 3.3.5,
             // so we can rely on it not being localized.
             "Unknown host: (.*)");
-    
     private static final Pattern unreachablePattern = Pattern.compile(
     // This is the hard-coded part of the error message in s3270 version 3.3.5.
             "Connect to ([^,]+), port ([0-9]+): (.*)");
@@ -509,6 +494,7 @@ public class S3270 {
 
     private static final Pattern FUNCTION_KEY_PATTERN = Pattern.compile("p(f|a)([0-9]{1,2})");
 
+    @SuppressWarnings("unchecked")
     public void doKey(final String key) {
         assertConnected();
         final Matcher m = FUNCTION_KEY_PATTERN.matcher(key);
@@ -524,7 +510,7 @@ public class S3270 {
             this.enter();
         } else { // other key: find a parameterless method of the same name
             try {
-                final Class<? extends S3270> c = this.getClass();
+                final Class c = this.getClass();
                 final Method method = c.getMethod(key, new Class[] {});
                 method.invoke(this, new Object[] {});
             } catch (final NoSuchMethodException ex) {
@@ -538,16 +524,4 @@ public class S3270 {
         }
     }
 
-    /**
-     * Set debug level programmatically, e.g. via TerminalResource
-     * 
-     * @param isDebug flag to activate debug mode
-     */
-    public void setDebug(boolean isDebug) {
-    	if (isDebug) {
-    		logger.setLevel(Level.DEBUG);
-    	} else {
-    		logger.setLevel(Level.INFO);
-    	}
-    }
 }
