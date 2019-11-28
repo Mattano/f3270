@@ -173,7 +173,8 @@ public class TerminalResource extends ExternalResource {
 			this.pathToClient = tClientPath;
 		}
 		// connect to host with given settings.
-		this.driver = new Terminal(this.pathToClient, "",  this.host, this.port, this.type, this.mode, this.charset, this.showTerminal, this.debug);
+		this.driver = new Terminal(this.pathToClient, "", this.host, this.port, this.type, this.mode,
+				this.charset, "", this.showTerminal, this.debug);
 		logger.info("connect to host (" + this.host + ":" + this.port + ") with charset: " + this.charset);
 		this.driver.connect();
 	}

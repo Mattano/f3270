@@ -26,6 +26,7 @@ public class Terminal {
     private final TerminalModel mode;
     private final boolean debug;
     private final HostCharset charset;
+    private final String verifyCert;
 	private final boolean showTerminalWindow;
     private static final char MAINFRAME_BLANK_CHAR = '\u0000';
     private static final char SINGLE_SPACE = ' ';
@@ -41,7 +42,7 @@ public class Terminal {
      * @param showTerminalWindow flag if terminal should be shown
      */
     public Terminal(final String s3270Path, String sslConection, final String hostname, final int port, final TerminalType type,
-            final TerminalModel mode, final HostCharset charset, final boolean showTerminalWindow) {
+            final TerminalModel mode, final HostCharset charset,final String verifyCert, final boolean showTerminalWindow) {
         this.s3270Path = s3270Path;
         this.sslConection = sslConection;
         this.hostname = hostname;
@@ -49,6 +50,7 @@ public class Terminal {
         this.type = type;
         this.mode = mode;
         this.charset = charset;
+        this.verifyCert = verifyCert;
 		this.showTerminalWindow = showTerminalWindow;
 		this.debug = false;
         addDefaultObservers();
@@ -66,7 +68,7 @@ public class Terminal {
      * @param isDebug flag if debug infos should be shown
      */
     public Terminal(final String s3270Path, final String sslConection, final String hostname, final int port, final TerminalType type,
-            final TerminalModel mode, final HostCharset charset, final boolean showTerminalWindow, final boolean isDebug) {
+            final TerminalModel mode, final HostCharset charset, final String verifyCert, final boolean showTerminalWindow, final boolean isDebug) {
         this.s3270Path = s3270Path;
         this.sslConection = sslConection;
         this.hostname = hostname;
@@ -74,6 +76,7 @@ public class Terminal {
         this.type = type;
         this.mode = mode;
         this.charset = charset;
+        this.verifyCert = verifyCert;
 		this.showTerminalWindow = showTerminalWindow;
 		this.debug = isDebug;
         addDefaultObservers();
@@ -96,7 +99,7 @@ public class Terminal {
     }
 
     public Terminal connect() {
-        s3270 = new S3270(this.s3270Path, this.sslConection, this.hostname, this.port, this.type, this.charset, this.mode);
+        s3270 = new S3270(this.s3270Path, this.sslConection, this.hostname, this.port, this.type, this.charset, this.verifyCert, this.mode);
         s3270.setDebug(this.debug);
         updateScreen();
         for (TerminalObserver observer : observers) {

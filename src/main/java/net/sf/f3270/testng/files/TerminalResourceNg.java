@@ -51,6 +51,8 @@ public class TerminalResourceNg {
      */
     private String sslConnection = "";
 
+    private String verifyCert = "";
+
     /**
      * show terminal during testrun if set to true
      */
@@ -115,7 +117,11 @@ public class TerminalResourceNg {
 
     public TerminalResourceNg withSSL(boolean isSSL){
         if (isSSL) sslConnection = "L:";
-        else sslConnection = "";
+        return this;
+    }
+
+    public TerminalResourceNg verifyCert(boolean isverifyCert){
+        if (!isverifyCert) verifyCert = "-noverifycert";
         return this;
     }
 
@@ -168,7 +174,8 @@ public class TerminalResourceNg {
             this.pathToClient = tClientPath;
         }
         // connect to host with given settings.
-        this.driver = new Terminal(this.pathToClient, this.sslConnection, this.host, this.port, this.type, this.mode, this.charset, this.showTerminal, this.debug);
+        this.driver = new Terminal(this.pathToClient, this.sslConnection, this.host, this.port, this.type,
+                this.mode, this.charset, this.verifyCert, this.showTerminal, this.debug);
         logger.info("connect to host (" + this.host + ":" + this.port + ") with charset: " + this.charset);
         this.driver.connect();
     }

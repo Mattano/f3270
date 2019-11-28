@@ -16,7 +16,7 @@ public class TestNgMainframe {
 
     @BeforeTest
     public void before() throws Throwable{
-        terminal = new TerminalResourceNg().withHost("teague-tammvs1.tamu.edu").withPort(992).withSSL(true)
+        terminal = new TerminalResourceNg().withHost("teague-tammvs1.tamu.edu").withPort(992).withSSL(true).verifyCert(false)
                 .withMode(TerminalModel.MODE_80_24).withType(TerminalType.TYPE_3279).showTerminalWindow(true).setDebug(true);
         terminal.connect();
 
@@ -37,11 +37,6 @@ public class TestNgMainframe {
         terminal.getDriver().enter();
         Assertion assertion = new Assertion();
         assertion.assertTrue(terminal.getDriver().screenHasLabel(new FieldIdentifier("PATRICIA A ALEXANDER")));
-    }
-
-    @AfterTest
-    public void after() {
-        terminal.disconnect();
     }
 
 }
