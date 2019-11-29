@@ -19,7 +19,7 @@ public class TerminalResourceNg {
     private Terminal driver;
 
     /** specify path to client, default to windows version */
-    private String pathToClient = "D:\\wc3270\\ws3270.exe";
+    private String pathToClient = "ws3270.exe";
 
     /**
      * Host-Terminal

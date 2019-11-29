@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="SuiteA" verbose="1">
+    <test name="Teste a">
+        <classes>
+            <class name="net.sf.f3270.testng.TestNgMainframe">
+                <methods>
+                    <include name="test3270"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
