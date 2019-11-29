@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.quaresmeira</groupId>
 	<artifactId>f3270</artifactId>
-	<version>1.4.0</version>
+	<version>1.4.1</version>
 
 	<name>f3270</name>
 	<description>Java framework for testing mainframe (TN3270) applications </description>
