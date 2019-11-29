@@ -59,6 +59,7 @@ public class S3270 {
     private final TerminalModel mode;
     private final HostCharset charset;
     private final String verifyCert;
+    private boolean debug;
 
     private S3270Screen screen = null;
 
@@ -101,7 +102,8 @@ public class S3270 {
      *             for any other error not matched by the above
      */
     public S3270(final String s3270Path, final String sslConnection, final String hostname, final int port,
-                 final TerminalType type, final HostCharset hostCharset,final String verifyCert, final TerminalModel mode) {
+                 final TerminalType type, final HostCharset hostCharset,final String verifyCert, final TerminalModel mode,
+                 final boolean debug) {
 
         this.s3270Path = s3270Path;
         this.sslConnection = sslConnection;
@@ -111,6 +113,7 @@ public class S3270 {
         this.mode = mode;
         this.charset = hostCharset;
         this.verifyCert = verifyCert;
+        this.debug = debug;
         this.screen = new S3270Screen();
 
         checkS3270PathValid(s3270Path);
@@ -118,7 +121,8 @@ public class S3270 {
         final String commandLine = String.format("%s -model %s-%d %s%s:%d -charset %s %s", this.s3270Path, this.type.getType(), this.mode.getMode(),
                 this.sslConnection, this.hostname, this.port, this.charset.getCharsetName(), this.verifyCert);
         try {
-            logger.info("starting " + commandLine);
+            if (this.debug)
+                logger.info("starting " + commandLine);
             s3270 = Runtime.getRuntime().exec(commandLine);
 
             out = new PrintWriter(new OutputStreamWriter(s3270.getOutputStream(), "ISO-8859-1"));
@@ -144,8 +148,8 @@ public class S3270 {
      * @param mode      enulation mode
      */
     public S3270(final String s3270Path, String sslConnection, final String hostname, final int port, final TerminalType type,
-            final String verifyCert, final TerminalModel mode) {
-    	this(s3270Path, sslConnection, hostname, port, type, HostCharset.BRACKET, verifyCert, mode);
+            final String verifyCert, final TerminalModel mode, final boolean debug) {
+    	this(s3270Path, sslConnection, hostname, port, type, HostCharset.BRACKET, verifyCert, mode, debug);
     }
 
     private void checkS3270PathValid(String path) {

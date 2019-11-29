@@ -99,7 +99,7 @@ public class Terminal {
     }
 
     public Terminal connect() {
-        s3270 = new S3270(this.s3270Path, this.sslConection, this.hostname, this.port, this.type, this.charset, this.verifyCert, this.mode);
+        s3270 = new S3270(this.s3270Path, this.sslConection, this.hostname, this.port, this.type, this.charset, this.verifyCert, this.mode, this.debug);
         s3270.setDebug(this.debug);
         updateScreen();
         for (TerminalObserver observer : observers) {
@@ -164,6 +164,10 @@ public class Terminal {
     
     public int getHeight() {
         return s3270.getScreen().getHeight();
+    }
+
+    public boolean getDebug() {
+        return debug;
     }
 
     public void enter() {

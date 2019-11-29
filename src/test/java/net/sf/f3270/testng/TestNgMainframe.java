@@ -16,7 +16,7 @@ public class TestNgMainframe {
     @BeforeTest
     public void before() throws Throwable{
         terminal = new TerminalResourceNg().withHost("teague-tammvs1.tamu.edu").withPort(992).withSSL(true).verifyCert(false)
-                .withMode(TerminalModel.MODE_80_24).withType(TerminalType.TYPE_3279).showTerminalWindow(true).setDebug(true);
+                .withMode(TerminalModel.MODE_80_24).withType(TerminalType.TYPE_3279).showTerminalWindow(true).setDebug(false);
         terminal.connect();
     }
 

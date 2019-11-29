@@ -17,7 +17,8 @@ public class TerminalScreenToConsoleObserver extends TerminalObserver {
         super.screenUpdated();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(stream);
-        terminal.printScreen(printStream);
+        if (terminal.getDebug())
+            terminal.printScreen(printStream);
         screenContents = stream.toString();
     }
 
@@ -28,7 +29,8 @@ public class TerminalScreenToConsoleObserver extends TerminalObserver {
         if (returned != null) {
             output += "=" + returned;
         }
-        System.out.println(output);
+        if (terminal.getDebug())
+            System.out.println(output);
         delayedPrintScreen();
     }
 

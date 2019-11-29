@@ -12,7 +12,6 @@ public class TerminalResourceNg {
      * Logger
      */
     private static final Logger logger = Logger.getLogger(TerminalResourceNg.class);
-
     /**
      * Terminal
      */
@@ -61,7 +60,7 @@ public class TerminalResourceNg {
     /**
      * show incoming and outgoing api calls
      */
-    private boolean debug;
+    private boolean debug = false;
 
     /**
      * Standard constructor
@@ -176,7 +175,8 @@ public class TerminalResourceNg {
         // connect to host with given settings.
         this.driver = new Terminal(this.pathToClient, this.sslConnection, this.host, this.port, this.type,
                 this.mode, this.charset, this.verifyCert, this.showTerminal, this.debug);
-        logger.info("connect to host (" + this.host + ":" + this.port + ") with charset: " + this.charset);
+        if (this.debug)
+            logger.info("connect to host (" + this.host + ":" + this.port + ") with charset: " + this.charset);
         this.driver.connect();
     }
 
