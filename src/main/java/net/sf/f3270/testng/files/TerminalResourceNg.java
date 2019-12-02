@@ -4,6 +4,7 @@ import net.sf.f3270.HostCharset;
 import net.sf.f3270.Terminal;
 import net.sf.f3270.TerminalModel;
 import net.sf.f3270.TerminalType;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.log4j.Logger;
 
 public class TerminalResourceNg {
@@ -18,7 +19,7 @@ public class TerminalResourceNg {
     private Terminal driver;
 
     /** specify path to client, default to windows version */
-    private String pathToClient = "ws3270.exe";
+    private String pathToClient = "s3270";
 
     /**
      * Host-Terminal
@@ -68,6 +69,7 @@ public class TerminalResourceNg {
     public TerminalResourceNg() {
         host = "";
         port = 0;
+        if (SystemUtils.IS_OS_WINDOWS) pathToClient = "ws3270";
     }
 
     /**
@@ -120,7 +122,7 @@ public class TerminalResourceNg {
     }
 
     public TerminalResourceNg verifyCert(boolean isverifyCert){
-        if (!isverifyCert) verifyCert = "-noverifycert";
+        if (!isverifyCert && SystemUtils.IS_OS_WINDOWS) verifyCert = "-noverifycert";
         return this;
     }
 

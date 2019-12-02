@@ -3,3 +3,5 @@
 /doxygen.config
 /.settings/
 /.classpath
+ws3270.exe
+.travis.yml

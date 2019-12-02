@@ -11,25 +11,27 @@
 	<description>Java framework for testing mainframe (TN3270) applications </description>
 	<inceptionYear>2009</inceptionYear>
 
-	<url>https://github.com/vebqa/f3270</url>
+<!--	<licenses>-->
+<!--		<license>-->
+<!--			<name>GNU GPL</name>-->
+<!--			<url>http://www.gnu.org/licenses/gpl.txt</url>-->
+<!--		</license>-->
+<!--	</licenses>-->
 
-	<scm>
-		<url>https://github.com/vebqa/f3270</url>
-	</scm>
+<!--	<developers>-->
+<!--		<developer>-->
+<!--			<name>Karsten Doerges</name>-->
+<!--			<email>kdoerges@googlemail.com</email>-->
+<!--		</developer>-->
+<!--	</developers>-->
 
-	<licenses>
-		<license>
-			<name>GNU GPL</name>
-			<url>http://www.gnu.org/licenses/gpl.txt</url>
-		</license>
-	</licenses>
+	<distributionManagement>
 
-	<developers>
-		<developer>
-			<name>Karsten Doerges</name>
-			<email>kdoerges@googlemail.com</email>
-		</developer>
-	</developers>
+		<repository>
+			<id>internal</id>
+			<url>file://${project.build.directory}/mvn-repo</url>
+		</repository>
+	</distributionManagement>
 
 	<properties>
 		<site.path></site.path>
@@ -158,6 +160,12 @@
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 			<version>7.0.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.0</version>
 		</dependency>
 	</dependencies>
 </project>
