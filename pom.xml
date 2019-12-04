@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.quaresmeira</groupId>
 	<artifactId>f3270</artifactId>
-	<version>1.4.1</version>
+	<version>1.4.2</version>
 
 	<name>f3270</name>
 	<description>Java framework for testing mainframe (TN3270) applications </description>
@@ -29,7 +29,7 @@
 
 		<repository>
 			<id>internal</id>
-			<url>file://${project.build.directory}/mvn-repo</url>
+			<url>https://github.com/quaresmeira/f3270</url>
 		</repository>
 	</distributionManagement>
 
